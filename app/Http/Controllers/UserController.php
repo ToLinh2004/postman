@@ -7,23 +7,19 @@ use Illuminate\Http\Request;
 
 
 
- /**
- * @OA\Get(
- *     path="/api/users",
- *     summary="Get all user",
- *     description="Get title all user",
- *     tags={"GET"},
- *     @OA\Response(
- *         response=200,
- *         description="OK",
- *         @OA\MediaType(
- *             mediaType="application/json"
- *         )
- *     )
- * )
- */
+    /**
+     * @OA\Get(
+     *     path="/api/users",
+     *     summary="Get all users",
+     *     tags={"Users"},
+     *      @OA\Response(response=200, description="All Users" ),
+     *      @OA\Response(response=400, description="Bad request"),
+     *      @OA\Response(response=404, description="Resource Not Found"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
 
-  /**
+   /**
     * @OA\Post(
         *     path="/api/users",
         *     summary="Create a new user",
@@ -44,8 +40,7 @@ use Illuminate\Http\Request;
         * )
         */
 
-
-  /**
+   /**
  * @OA\Get(
  *     path="/api/users/{id}",
  *     summary="Get a specific user",
@@ -63,30 +58,8 @@ use Illuminate\Http\Request;
  *     security={{"bearerAuth":{}}}
  * )
  */
-
-
-      /**
+ /**
      * @OA\Put(
-     *     path="/api/users/{id}",
-     *     summary="Delete a specific user",
-     *     tags={"Users"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response=200, description="Delate user" ),
-     *      @OA\Response(response=400, description="Bad request"),
-     *      @OA\Response(response=404, description="Resource Not Found"),
-     *     security={{"bearerAuth":{}}}
-     * )
-     */
-
-
-      /**
-     * @OA\Delete(
      *     path="/api/users/{id}",
      *     summary="Update a specific user",
      *     tags={"Users"},
@@ -97,19 +70,39 @@ use Illuminate\Http\Request;
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\RequestBody(
- *         required=true,
- *         @OA\MediaType(
- *             mediaType="application/json",
- *             @OA\Schema(
- *                 type="object",
- *                  @OA\Property(property="name", type="string", example="john_doe"),
- *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *             @OA\Property(property="password", type="string", example="password123")
- *             )
- *         )
- *     ),
-     *     @OA\Response(response=200, description="Update User"),
+        * @OA\RequestBody(
+    *         required=true,
+    *         @OA\MediaType(
+    *             mediaType="application/json",
+    *             @OA\Schema(
+    *                 type="object",
+    *                  @OA\Property(property="name", type="string", example="john_doe"),
+    *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+    *             @OA\Property(property="password", type="string", example="password123")
+    *             )
+    *         )
+    *     ),
+     *     @OA\Response(response=200, description="Delate user" ),
+     *      @OA\Response(response=400, description="Bad request"),
+     *      @OA\Response(response=404, description="Resource Not Found"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
+       /**
+     * @OA\Delete(
+     *     path="/api/users/{id}",
+     *     summary="Delete a specific user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *
+     *     @OA\Response(response=200, description="Delete User"),
      *     @OA\Response(response=400, description="Bad request"),
      *     @OA\Response(response=404, description="Resource Not Found"),
      *     security={{"bearerAuth":{}}}
@@ -142,7 +135,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
-        return User::create($request->all());
+        $request->validate([
+            'name' => 'required|string|min:3|max:15',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
+        $user=User::create($request->all());
+        return response()->json($user);
     }
 
     /**
@@ -171,6 +170,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'name' => 'required|string|min:3|max:15',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
+
         $user= User::findOrFail($id);
         $user->update($request->all());
         return $user;
