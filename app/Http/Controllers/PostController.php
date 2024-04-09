@@ -47,44 +47,34 @@ use Illuminate\Http\Request;
 
 
  /**
- * @OA\Put(
- *     path="/api/posts/{id}",
- *     summary="Update a post by ID",
- *     description="Update a post with the provided data by its unique identifier",
- *     tags={"Posts"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         description="ID of the post to update",
- *         @OA\Schema(
- *             type="integer"
- *         )
- *     ),
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             required={"title", "description"},
- *             @OA\Property(property="title", type="string", example="Updated Post Title"),
- *             @OA\Property(property="description", type="string", example="This is an updated post description")
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="OK",
- *         @OA\MediaType(
- *             mediaType="application/json"
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Post not found",
- *         @OA\MediaType(
- *             mediaType="application/json"
- *         )
- *     )
- * )
- */
+     * @OA\Put(
+     *     path="/api/posts/{id}",
+     *     summary="Update post",
+     *     tags={"Posts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Post ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(property="name", type="string", example="New Post Title"),
+     *                 @OA\Property(property="description", type="string", example="This is a new post description")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Update Post"),
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Resource Not Found"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
 /**
  * @OA\Delete(
  *     path="/api/posts/{id}",
@@ -144,7 +134,12 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //
-        return Post::create($request->all());
+        $request->validate([
+            'title' => 'required|unique:posts|min:5|max:100',
+            'description' => 'required|min:10|max:50',
+        ]);
+        $post= Post::create($request->all());
+        return  response()->json($post, 201);
     }
 
     /**
@@ -172,9 +167,14 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'title' => 'required|min:5|max:100',
+            'description' => 'required|min:10|max:50',
+        ]);
+
         $post = Post::findOrFail($id);
         $post->update($request->all());
-        return $post;
+        return  response()->json($post);
     }
 
     /**

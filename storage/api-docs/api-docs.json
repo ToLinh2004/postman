@@ -1,38 +1,44 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Your super ApplicationAPI",
+        "title": "Your super  ApplicationAPI",
         "version": "1.0.0"
     },
     "paths": {
         "/api/posts": {
             "get": {
                 "tags": [
-                    "GET"
+                    "Posts"
                 ],
-                "summary": "Get all post",
-                "description": "Get title and description",
-                "operationId": "8c292c8777126dc6d3efb05793ca8517",
+                "summary": "Get all posts",
+                "operationId": "e9eaf7df702a94f4443677bd1a36cfe6",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {}
-                        }
+                        "description": "All Post"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
-                    "POST"
+                    "Posts"
                 ],
-                "summary": "Create post",
+                "summary": "Create a new post",
+                "description": "Create a new post with the provided title and description",
+                "operationId": "4a657e51a0066c64781851f2fd2651e2",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
+                                "required": [
+                                    "title",
+                                    "description"
+                                ],
                                 "properties": {
                                     "title": {
                                         "type": "string",
@@ -43,10 +49,7 @@
                                         "example": "This is a new post description"
                                     }
                                 },
-                                "required": [
-                                    "title",
-                                    "description"
-                                ]
+                                "type": "object"
                             }
                         }
                     }
@@ -61,21 +64,47 @@
                 }
             }
         },
-
         "/api/posts/{id}": {
-            "put": {
+            "get": {
                 "tags": [
-                    "Put"
+                    "Posts"
                 ],
-                "summary": "Update a post by ID",
-                "description": "Update a post with the provided data by its unique identifier",
-                "operationId": "updatePostById",
+                "summary": "Get one posts",
+                "operationId": "b0f9d92879218f68a376b6edc6467c67",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Post ID",
                         "required": true,
-                        "description": "ID of the post to update",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "One Post"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "PUT": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Update post",
+                "operationId": "929614537d76a081a92170a41ed3bdb3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
@@ -86,267 +115,60 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
                                 "properties": {
-                                    "title": {
+                                    "name": {
                                         "type": "string",
-                                        "example": "Updated Post Title"
+                                        "example": "New Post Title"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "This is an updated post description"
+                                        "example": "This is a new post description"
                                     }
                                 },
-                                "required": [
-                                    "title",
-                                    "description"
-                                ]
+                                "type": "object"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "404": {
-                        "description": "Post not found",
-                        "content": {
-                            "application/json": {}
-                        }
+                        "description": "Update Post"
                     }
-                }
-            },
-
-                "delete": {
-                    "tags": [
-                        "Delete"
-                    ],
-                    "summary": "Delete a post by ID",
-                    "description": "Delete a post with the provided ID",
-                    "operationId": "deletePostById",
-                    "parameters": [
-                        {
-                            "name": "id",
-                            "in": "path",
-                            "required": true,
-                            "description": "ID of the post to delete",
-                            "schema": {
-                                "type": "integer"
-                            }
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "OK",
-                            "content": {
-                                "application/json": {}
-                            }
-                        },
-                        "404": {
-                            "description": "Post not found",
-                            "content": {
-                                "application/json": {}
-                            }
-                        }
-                    }
-                }
-            },
-
-            "/api/users": {
-                "get": {
-                    "tags": [
-                        "GETUsers"
-                    ],
-                    "summary": "Get all users",
-                    "operationId": "c457726701591d1183b53aa71fc13441",
-                    "responses": {
-                        "200": {
-                            "description": "All Users"
-                        },
-                        "400": {
-                            "description": "Bad request"
-                        },
-                        "404": {
-                            "description": "Resource Not Found"
-                        }
-                    },
-                    "security": [
-                        {
-                            "bearerAuth": []
-                        }
-                    ]
                 },
-                "post": {
-                    "tags": [
-                        "PostUsers"
-                    ],
-                    "summary": "Create a new user",
-                    "description": "Create a new user with the provided username, email, and password",
-                    "operationId": "592819a0265360b2014512d6dbfaf0e7",
-                    "requestBody": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Delete a specific post",
+                "operationId": "fad1726bd24cd459fc1525b67985df39",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Post ID",
                         "required": true,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "required": [
-                                        "name",
-                                        "email",
-                                        "password"
-                                    ],
-                                    "properties": {
-                                        "name": {
-                                            "type": "string",
-                                            "example": "john_doe"
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "format": "email",
-                                            "example": "john@example.com"
-                                        },
-                                        "password": {
-                                            "type": "string",
-                                            "example": "password123"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Create New User"
-                        },
-                        "400": {
-                            "description": "Bad request"
-                        },
-                        "404": {
-                            "description": "Resource Not Found"
+                        "schema": {
+                            "type": "integer"
                         }
                     }
-                }
-            },
-            "/api/users/{id}": {
-                "get": {
-                    "tags": [
-                        "GetDetailUsers"
-                    ],
-                    "summary": "Get a specific user",
-                    "operationId": "36a33ff774d5cba33c039dec2c3e0287",
-                    "parameters": [
-                        {
-                            "name": "id",
-                            "in": "path",
-                            "description": "ID of the user to retrieve",
-                            "required": true,
-                            "schema": {
-                                "type": "integer"
-                            }
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "User Detail"
-                        },
-                        "400": {
-                            "description": "Bad request"
-                        },
-                        "404": {
-                            "description": "Resource Not Found"
-                        }
-                    },
-                    "security": [
-                        {
-                            "bearerAuth": []
-                        }
-                    ]
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete Post"
+                    }
                 },
-                "delete": {
-                    "tags": [
-                        "DeleteUsers"
-                    ],
-                    "summary": "Delete a specific user",
-                    "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
-                    "parameters": [
-                        {
-                            "name": "id",
-                            "in": "path",
-                            "description": "User ID",
-                            "required": true,
-                            "schema": {
-                                "type": "integer"
-                            }
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Delate user"
-                        }
-                    },
-                    "security": [
-                        {
-                            "bearerAuth": []
-                        }
-                    ]
-                },
-                "put": {
-                    "tags": [
-                        "PutUsers"
-                    ],
-                    "summary": "Update a specific user",
-                    "operationId": "fa56cffde745d3f152f95cbacd936c0b",
-                    "parameters": [
-                        {
-                            "name": "id",
-                            "in": "path",
-                            "description": "User ID",
-                            "required": true,
-                            "schema": {
-                                "type": "integer"
-                            }
-                        }
-                    ],
-                    "requestBody": {
-                        "required": true,
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "name": {
-                                            "type": "string",
-                                            "example": "john_doe"
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "format": "email",
-                                            "example": "john@example.com"
-                                        },
-                                        "password": {
-                                            "type": "string",
-                                            "example": "password123"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "responses": {
-                        "200": {
-                            "description": "Update User"
-                        }
-                    },
-                    "security": [
-                        {
-                            "bearerAuth": []
-                        }
-                    ]
-                }
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
-
-}
+        }
+    }
 }
