@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Your super ApplicationAPI",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/posts": {
+            "get": {
+                "tags": [
+                    "GET"
+                ],
+                "summary": "Get all post",
+                "description": "Get title and description",
+                "operationId": "8c292c8777126dc6d3efb05793ca8517",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Create post",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "New Post Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "This is a new post description"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "description"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+
+        "/api/posts/{id}": {
+            "put": {
+                "tags": [
+                    "Put"
+                ],
+                "summary": "Update a post by ID",
+                "description": "Update a post with the provided data by its unique identifier",
+                "operationId": "updatePostById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the post to update",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Updated Post Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "This is an updated post description"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "description"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Post not found",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            
+                "delete": {
+                    "tags": [
+                        "Delete"
+                    ],
+                    "summary": "Delete a post by ID",
+                    "description": "Delete a post with the provided ID",
+                    "operationId": "deletePostById",
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "required": true,
+                            "description": "ID of the post to delete",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "OK",
+                            "content": {
+                                "application/json": {}
+                            }
+                        },
+                        "404": {
+                            "description": "Post not found",
+                            "content": {
+                                "application/json": {}
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+}
+
